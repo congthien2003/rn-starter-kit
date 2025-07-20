@@ -1,42 +1,84 @@
 {
-  "expo": {
-    "name": "mobile-starter-kit",
-    "slug": "mobile-starter-kit",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "mobilestarterkit",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
-  }
+	"expo": {
+		"name": "mobile-starter-kit",
+		"slug": "mobile-starter-kit",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/images/icon.png",
+		"scheme": "mobilestarterkit",
+		"userInterfaceStyle": "automatic",
+		"newArchEnabled": true,
+		"ios": {
+			"supportsTablet": true,
+			"bundleIdentifier": "com.jone02.app",
+			"buildNumber": "1",
+			"infoPlist": {
+				"NSPhotoLibraryUsageDescription": "Ứng dụng cần truy cập thư viện ảnh để người dùng có thể chọn ảnh.",
+				"NSPhotoLibraryAddUsageDescription": "Ứng dụng cần quyền lưu ảnh vào thư viện của bạn.",
+				"ITSAppUsesNonExemptEncryption": false,
+				"NSAppTransportSecurity": {
+					"NSAllowsArbitraryLoads": true,
+					"NSExceptionDomains": {
+						"jone02.pro.vn": {
+							"NSExceptionAllowsInsecureHTTPLoads": true,
+							"NSExceptionMinimumTLSVersion": "1.0",
+							"NSIncludesSubdomains": true
+						}
+					}
+				}
+			}
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/images/splash-icon.png",
+				"backgroundColor": "#ffffff"
+			},
+			"edgeToEdgeEnabled": true,
+			"package": "com.jone02.app",
+			"versionCode": 1,
+			"permissions": [
+				"android.permission.WRITE_EXTERNAL_STORAGE",
+				"android.permission.INTERNET"
+			],
+			"usesCleartextTraffic": true,
+			"networkSecurityConfig": "./network_security_config.xml"
+		},
+		"web": {
+			"bundler": "metro",
+			"output": "static",
+			"favicon": "./assets/images/favicon.png"
+		},
+		"plugins": [
+			"expo-router",
+			[
+				"expo-splash-screen",
+				{
+					"image": "./assets/images/splash-icon.png",
+					"imageWidth": 200,
+					"resizeMode": "contain",
+					"backgroundColor": "#ffffff"
+				}
+			],
+			[
+				"expo-image-picker",
+				{
+					"photosPermission": "Ứng dụng cần truy cập thư viện ảnh để người dùng có thể chọn ảnh cho bài đăng.",
+					"cameraPermission": "Ứng dụng cần quyền truy cập camera để chụp ảnh.",
+					"mediaLibraryWriteOnlyPermission": "Ứng dụng cần quyền lưu ảnh vào thư viện của bạn."
+				}
+			],
+			[
+				"expo-media-library",
+				{
+					"photosPermission": "Ứng dụng cần quyền truy cập thư viện ảnh để lưu nội dung khi copy bài đăng.",
+					"savePhotosPermission": "Ứng dụng cần quyền lưu ảnh vào trong thư viện ảnh để copy nội dung bài đăng.",
+					"isAccessMediaLocationEnabled": true
+				}
+			],
+			"expo-font"
+		],
+		"experiments": {
+			"typedRoutes": true
+		}
+	}
 }

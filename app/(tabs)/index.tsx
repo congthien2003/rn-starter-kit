@@ -1,75 +1,92 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet, View } from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { AppText, ImageCarousel } from "@/components";
+import { commonStyles } from "@/styles/common";
+import Animated, { FadeIn } from "react-native-reanimated";
+
+const mockImages = [
+	{
+		id: "1",
+		uri: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop",
+	},
+	{
+		id: "2",
+		uri: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=400&fit=crop",
+	},
+	{
+		id: "3",
+		uri: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop",
+	},
+	{
+		id: "4",
+		uri: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=400&fit=crop",
+	},
+	{
+		id: "5",
+		uri: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop",
+	},
+];
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+	return (
+		<Animated.ScrollView style={commonStyles.container}>
+			<Animated.View style={styles.hero}>
+				<View style={styles.titleContainer}>
+					<AppText variant="h2">Welcome to my starter app</AppText>
+				</View>
+				<View style={styles.hero}>
+					<ImageCarousel images={mockImages} height={250} />
+				</View>
+				<View style={styles.cardContainer}>
+					<Animated.View style={styles.cardItems}>
+						<AppText variant="h3">Caloríe</AppText>
+						<AppText
+							style={{
+								fontSize: 15,
+							}}>
+							1000
+						</AppText>
+						<AppText>Kcal</AppText>
+					</Animated.View>
+					<Animated.View style={styles.cardItems} entering={FadeIn}>
+						<AppText variant="h3">Caloríe</AppText>
+						<AppText
+							style={{
+								fontSize: 15,
+							}}>
+							1000
+						</AppText>
+						<AppText>Kcal</AppText>
+					</Animated.View>
+				</View>
+			</Animated.View>
+		</Animated.ScrollView>
+	);
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+	hero: {
+		backgroundColor: "#fdfdfd",
+	},
+	titleContainer: {
+		padding: 8,
+	},
+	cardContainer: {
+		display: "flex",
+		flex: 1,
+		flexDirection: "row",
+		gap: 16,
+		padding: 8,
+		paddingHorizontal: 16,
+	},
+	cardItems: {
+		flex: 1,
+		display: "flex",
+		justifyContent: "space-between",
+		alignItems: "center",
+		backgroundColor: "#88c0d0",
+		borderRadius: 16,
+		padding: 16,
+		paddingVertical: 24,
+	},
 });
