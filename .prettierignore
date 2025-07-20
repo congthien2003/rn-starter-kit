@@ -1,0 +1,7 @@
+build/
+dist/
+android/
+ios/
+.expo/
+.env
+.vscode/
