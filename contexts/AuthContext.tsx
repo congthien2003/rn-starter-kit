@@ -1,7 +1,6 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { MMKV } from "react-native-mmkv";
 
-export const storage = new MMKV();
 interface User {
   id: string;
   email: string;
@@ -34,8 +33,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loadStoredUser = async () => {
     try {
-      const storedUser = storage.getString(USER_STORAGE_KEY);
-      const storedToken = storage.getString(TOKEN_STORAGE_KEY);
+      const storedUser = await AsyncStorage.getItem(USER_STORAGE_KEY);
+      const storedToken = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
 
       if (storedUser && storedToken) {
         setUser(JSON.parse(storedUser));
@@ -62,8 +61,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       const mockToken = "mock_token_123";
 
-      storage.set(USER_STORAGE_KEY, JSON.stringify(mockUser));
-      storage.set(TOKEN_STORAGE_KEY, mockToken);
+      await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(mockUser));
+      await AsyncStorage.setItem(TOKEN_STORAGE_KEY, mockToken);
 
       setUser(mockUser);
       return true;
@@ -90,8 +89,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       const mockToken = "mock_token_123";
 
-      storage.set(USER_STORAGE_KEY, JSON.stringify(mockUser));
-      storage.set(TOKEN_STORAGE_KEY, mockToken);
+      await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(mockUser));
+      await AsyncStorage.setItem(TOKEN_STORAGE_KEY, mockToken);
 
       setUser(mockUser);
       return true;
@@ -105,8 +104,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async (): Promise<void> => {
     try {
-      storage.delete(USER_STORAGE_KEY);
-      storage.delete(TOKEN_STORAGE_KEY);
+      await AsyncStorage.removeItem(USER_STORAGE_KEY);
+      await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
       setUser(null);
     } catch (error) {
       console.error("Logout error:", error);
@@ -116,7 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateUser = async (userData: Partial<User>): Promise<void> => {
     try {
       const updatedUser = { ...user, ...userData } as User;
-      storage.set(USER_STORAGE_KEY, JSON.stringify(updatedUser));
+      await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
       setUser(updatedUser);
     } catch (error) {
       console.error("Update user error:", error);
