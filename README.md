@@ -4,15 +4,15 @@ Một React Native starter kit với Expo Router, được thiết kế theo ki�
 
 ## 🚀 Tech
 
--   **Expo Router v5** - File-based routing
--   **TypeScript** - Type safety
--   **Zustand** - State management
--   **Axios** - HTTP client với interceptors đơn giản
--   **AsyncStorage** - Local storage
--   **React Hook Form** - Form management và validation
--   **Modular Architecture** - Tổ chức code theo module
--   **Toast Notifications** - Error/Info/Success messages
--   **Light Theme Only** - Simplified theming
+- **Expo Router v5** - File-based routing
+- **TypeScript** - Type safety
+- **Zustand** - State management
+- **Axios** - HTTP client với interceptors đơn giản
+- **MMKV** - Local storage
+- **React Hook Form** - Form management và validation
+- **Modular Architecture** - Tổ chức code theo module
+- **Toast Notifications** - Error/Info/Success messages
+- **Light Theme Only** - Simplified theming
 
 ## 📁 Architecture
 
@@ -42,7 +42,7 @@ mobile-starter-kit/
 ├── stores/                # Zustand stores
 │   ├── loadingStore.ts    # Global loading state
 │   └── errorStore.ts      # Global error/notification state
-├── modules/               # Feature modules
+├── features/               # Feature modules
 │   ├── auth/              # Authentication module
 │   │   ├── models/        # TypeScript interfaces
 │   │   ├── hooks/         # Auth hooks với try-catch
@@ -65,27 +65,27 @@ mobile-starter-kit/
 
 ### 1. **Components Layer** (`/components`)
 
--   **Base Components**: Các component cơ bản có thể tái sử dụng
--   **SafeScreen**: Wrapper cho SafeAreaView và KeyboardAvoidingView
--   **AppText**: Text component với Roboto font, light theme only
--   **AppInput**: Input component với label, error, helper text
--   **AppButton**: Button component với nhiều variants và loading state
--   **AppModal**: Modal component với animation
--   **LoadingOverlay**: Global loading overlay
--   **ErrorNotification**: Toast notifications với icons
+- **Base Components**: Các component cơ bản có thể tái sử dụng
+- **SafeScreen**: Wrapper cho SafeAreaView và KeyboardAvoidingView
+- **AppText**: Text component với Roboto font, light theme only
+- **AppInput**: Input component với label, error, helper text
+- **AppButton**: Button component với nhiều variants và loading state
+- **AppModal**: Modal component với animation
+- **LoadingOverlay**: Global loading overlay
+- **ErrorNotification**: Toast notifications với icons
 
 ### 2. **Contexts Layer** (`/contexts`)
 
--   **AuthContext**: Quản lý authentication state
--   Tích hợp với AsyncStorage để persist data
--   Cung cấp login, register, logout methods
+- **AuthContext**: Quản lý authentication state
+- Tích hợp với MMKV để persist data
+- Cung cấp login, register, logout methods
 
 ### 3. **Stores Layer** (`/stores`)
 
--   **Zustand stores**: Global state management
--   **loadingStore**: Quản lý global loading state
--   **errorStore**: Quản lý toast notifications
--   Dễ dàng mở rộng thêm stores khác
+- **Zustand stores**: Global state management
+- **loadingStore**: Quản lý global loading state
+- **errorStore**: Quản lý toast notifications
+- Dễ dàng mở rộng thêm stores khác
 
 ### 4. **Modules Layer** (`/modules`)
 
@@ -105,16 +105,16 @@ modules/
 
 ### 5. **Libraries Layer** (`/libs`)
 
--   **Axios setup**: HTTP client với interceptors đơn giản
--   Authentication token handling với 401 auto-logout
--   Response data extraction (response.data)
--   Error handling với message extraction
+- **Axios setup**: HTTP client với interceptors đơn giản
+- Authentication token handling với 401 auto-logout
+- Response data extraction (response.data)
+- Error handling với message extraction
 
 ### 6. **Styles Layer** (`/styles`)
 
--   **Common styles**: Utility styles cho layout, buttons, inputs
--   Consistent design system với light theme
--   Roboto font family
+- **Common styles**: Utility styles cho layout, buttons, inputs
+- Consistent design system với light theme
+- Roboto font family
 
 ## 🛠️ Cách sử dụng
 
@@ -168,19 +168,19 @@ addError("Info message", "info");
 ```tsx
 // modules/auth/models/LoginRequest.ts
 export interface LoginRequest {
-	email: string;
-	password: string;
+  email: string;
+  password: string;
 }
 
 export interface LoginResponse {
-	user: {
-		id: string;
-		email: string;
-		name: string;
-		avatar?: string;
-	};
-	token: string;
-	refreshToken?: string;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    avatar?: string;
+  };
+  token: string;
+  refreshToken?: string;
 }
 ```
 
@@ -192,15 +192,13 @@ import { api } from "@/libs/axios";
 import { LoginRequest, LoginResponse } from "../models/LoginRequest";
 
 export const authService = {
-	login: async (data: LoginRequest): Promise<LoginResponse> => {
-		return (await api.post("/auth/login", data)) as LoginResponse;
-	},
+  login: async (data: LoginRequest): Promise<LoginResponse> => {
+    return (await api.post("/auth/login", data)) as LoginResponse;
+  },
 
-	register: async (
-		data: RegisterUserRequest
-	): Promise<RegisterUserResponse> => {
-		return (await api.post("/auth/register", data)) as RegisterUserResponse;
-	},
+  register: async (data: RegisterUserRequest): Promise<RegisterUserResponse> => {
+    return (await api.post("/auth/register", data)) as RegisterUserResponse;
+  },
 };
 ```
 
@@ -215,36 +213,33 @@ import { useErrorStore } from "@/stores/errorStore";
 import { useLoadingStore } from "@/stores/loadingStore";
 
 export const useAuth = () => {
-	const { setUser } = useAuthContext();
-	const { addError } = useErrorStore();
-	const { showLoading, hideLoading } = useLoadingStore();
+  const { setUser } = useAuthContext();
+  const { addError } = useErrorStore();
+  const { showLoading, hideLoading } = useLoadingStore();
 
-	const login = useCallback(
-		async (email: string, password: string): Promise<boolean> => {
-			try {
-				showLoading("Đang đăng nhập...");
-				const result = await authService.login({ email, password });
+  const login = useCallback(
+    async (email: string, password: string): Promise<boolean> => {
+      try {
+        showLoading("Đang đăng nhập...");
+        const result = await authService.login({ email, password });
 
-				// Update context with user data
-				setUser(result.user);
+        // Update context with user data
+        setUser(result.user);
 
-				addError("Đăng nhập thành công!", "success");
-				return true;
-			} catch (error) {
-				const message =
-					error instanceof Error
-						? error.message
-						: "Đăng nhập thất bại";
-				addError(message, "error");
-				return false;
-			} finally {
-				hideLoading();
-			}
-		},
-		[setUser, addError, showLoading, hideLoading]
-	);
+        addError("Đăng nhập thành công!", "success");
+        return true;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Đăng nhập thất bại";
+        addError(message, "error");
+        return false;
+      } finally {
+        hideLoading();
+      }
+    },
+    [setUser, addError, showLoading, hideLoading],
+  );
 
-	return { login, register, logout };
+  return { login, register, logout };
 };
 ```
 
@@ -257,50 +252,45 @@ import { useLoadingStore } from "@/stores/loadingStore";
 import { useForm, Controller } from "react-hook-form";
 
 export default function LoginScreen() {
-	const { login } = useAuth();
-	const { isLoading } = useLoadingStore();
+  const { login } = useAuth();
+  const { isLoading } = useLoadingStore();
 
-	const {
-		control,
-		handleSubmit,
-		formState: { errors },
-	} = useForm({
-		defaultValues: { email: "", password: "" },
-	});
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: { email: "", password: "" },
+  });
 
-	const onSubmit = async (data) => {
-		const success = await login(data.email, data.password);
-		if (success) {
-			router.replace("/(tabs)");
-		}
-	};
+  const onSubmit = async (data) => {
+    const success = await login(data.email, data.password);
+    if (success) {
+      router.replace("/(tabs)");
+    }
+  };
 
-	return (
-		<SafeScreen>
-			<Controller
-				control={control}
-				name="email"
-				rules={{
-					required: "Email không được để trống",
-					pattern: {
-						value: /\S+@\S+\.\S+/,
-						message: "Email không hợp lệ",
-					},
-				}}
-				render={({ field: { onChange, value } }) => (
-					<AppInput
-						label="Email"
-						value={value}
-						onChangeText={onChange}
-						error={errors.email?.message}
-					/>
-				)}
-			/>
-			<AppButton onPress={handleSubmit(onSubmit)} loading={isLoading}>
-				Đăng nhập
-			</AppButton>
-		</SafeScreen>
-	);
+  return (
+    <SafeScreen>
+      <Controller
+        control={control}
+        name="email"
+        rules={{
+          required: "Email không được để trống",
+          pattern: {
+            value: /\S+@\S+\.\S+/,
+            message: "Email không hợp lệ",
+          },
+        }}
+        render={({ field: { onChange, value } }) => (
+          <AppInput label="Email" value={value} onChangeText={onChange} error={errors.email?.message} />
+        )}
+      />
+      <AppButton onPress={handleSubmit(onSubmit)} loading={isLoading}>
+        Đăng nhập
+      </AppButton>
+    </SafeScreen>
+  );
 }
 ```
 
@@ -334,11 +324,11 @@ const updatedUser = await api.put(`/users/${id}`, updateData);
 
 // Error handling trong custom hooks
 try {
-	const result = await authService.login({ email, password });
-	// Success handling
+  const result = await authService.login({ email, password });
+  // Success handling
 } catch (error) {
-	// Error message từ API
-	console.log(error.message); // "Email hoặc mật khẩu không đúng"
+  // Error message từ API
+  console.log(error.message); // "Email hoặc mật khẩu không đúng"
 }
 ```
 
@@ -348,31 +338,26 @@ try {
 import { useForm, Controller } from "react-hook-form";
 
 const {
-	control,
-	handleSubmit,
-	formState: { errors },
+  control,
+  handleSubmit,
+  formState: { errors },
 } = useForm({
-	defaultValues: { email: "", password: "" },
+  defaultValues: { email: "", password: "" },
 });
 
 <Controller
-	control={control}
-	name="email"
-	rules={{
-		required: "Email không được để trống",
-		pattern: {
-			value: /\S+@\S+\.\S+/,
-			message: "Email không hợp lệ",
-		},
-	}}
-	render={({ field: { onChange, value } }) => (
-		<AppInput
-			label="Email"
-			value={value}
-			onChangeText={onChange}
-			error={errors.email?.message}
-		/>
-	)}
+  control={control}
+  name="email"
+  rules={{
+    required: "Email không được để trống",
+    pattern: {
+      value: /\S+@\S+\.\S+/,
+      message: "Email không hợp lệ",
+    },
+  }}
+  render={({ field: { onChange, value } }) => (
+    <AppInput label="Email" value={value} onChangeText={onChange} error={errors.email?.message} />
+  )}
 />;
 ```
 
@@ -396,15 +381,13 @@ import { api } from "@/libs/axios";
 import { NewFeatureRequest, NewFeatureResponse } from "../models/NewFeature";
 
 export const newFeatureService = {
-	getData: async (): Promise<NewFeatureResponse[]> => {
-		return (await api.get("/new-feature")) as NewFeatureResponse[];
-	},
+  getData: async (): Promise<NewFeatureResponse[]> => {
+    return (await api.get("/new-feature")) as NewFeatureResponse[];
+  },
 
-	createData: async (
-		data: NewFeatureRequest
-	): Promise<NewFeatureResponse> => {
-		return (await api.post("/new-feature", data)) as NewFeatureResponse;
-	},
+  createData: async (data: NewFeatureRequest): Promise<NewFeatureResponse> => {
+    return (await api.post("/new-feature", data)) as NewFeatureResponse;
+  },
 };
 ```
 
@@ -418,26 +401,25 @@ import { useErrorStore } from "@/stores/errorStore";
 import { useLoadingStore } from "@/stores/loadingStore";
 
 export const useNewFeature = () => {
-	const [data, setData] = useState([]);
-	const { addError } = useErrorStore();
-	const { showLoading, hideLoading } = useLoadingStore();
+  const [data, setData] = useState([]);
+  const { addError } = useErrorStore();
+  const { showLoading, hideLoading } = useLoadingStore();
 
-	const fetchData = useCallback(async () => {
-		try {
-			showLoading("Đang tải dữ liệu...");
-			const result = await newFeatureService.getData();
-			setData(result);
-			addError("Tải dữ liệu thành công!", "success");
-		} catch (error) {
-			const message =
-				error instanceof Error ? error.message : "Tải dữ liệu thất bại";
-			addError(message, "error");
-		} finally {
-			hideLoading();
-		}
-	}, [addError, showLoading, hideLoading]);
+  const fetchData = useCallback(async () => {
+    try {
+      showLoading("Đang tải dữ liệu...");
+      const result = await newFeatureService.getData();
+      setData(result);
+      addError("Tải dữ liệu thành công!", "success");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Tải dữ liệu thất bại";
+      addError(message, "error");
+    } finally {
+      hideLoading();
+    }
+  }, [addError, showLoading, hideLoading]);
 
-	return { data, fetchData };
+  return { data, fetchData };
 };
 ```
 
@@ -474,14 +456,14 @@ npm run web     # Web
 
 Chạy app và vào tab "Demo" để xem các components đã được implement:
 
--   SafeScreen với keyboard handling
--   AppText với Roboto font
--   AppInput với validation
--   AppModal với animation
--   Global loading overlay
--   Toast notifications với icons
--   Authentication flow với React Hook Form
--   Common styles showcase
+- SafeScreen với keyboard handling
+- AppText với Roboto font
+- AppInput với validation
+- AppModal với animation
+- Global loading overlay
+- Toast notifications với icons
+- Authentication flow với React Hook Form
+- Common styles showcase
 
 ## 🔧 Configuration
 
@@ -499,15 +481,15 @@ Chỉnh sửa `constants/Colors.ts` để customize light theme colors.
 
 ## 📚 Dependencies
 
--   **Expo SDK 53**
--   **React Native 0.79.5**
--   **Expo Router 5.1.4**
--   **Zustand** - State management
--   **Axios** - HTTP client
--   **AsyncStorage** - Local storage
--   **React Hook Form** - Form management
--   **React Native Reanimated** - Animations
--   **Expo Google Fonts** - Roboto font
+- **Expo SDK 53**
+- **React Native 0.79.5**
+- **Expo Router 5.1.4**
+- **Zustand** - State management
+- **Axios** - HTTP client
+- **MMKV** - Local storage
+- **React Hook Form** - Form management
+- **React Native Reanimated** - Animations
+- **Expo Google Fonts** - Roboto font
 
 ## 🤝 Contributing
 
